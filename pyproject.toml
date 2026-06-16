@@ -49,3 +49,5 @@ select = [
 "test_*.py" = ["ARG", "T20", "ERA"]
 # Re-export modules: unused imports are intentional
 "v7/hardware.py" = ["F401"]
+# CLI reporting tool: print() is the intended output
+"link_budget.py" = ["T20"]
