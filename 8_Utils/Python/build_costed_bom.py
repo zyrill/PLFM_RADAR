@@ -184,6 +184,28 @@ VARIANTS = {
     ],
 }
 
+# System-level mechanical/RF assemblies that are NOT in any PCB BOM but are
+# required to build a complete rotating radar. These have no repo pricing and
+# are the largest unmodeled cost items, so they are listed explicitly.
+SYSTEM_EXTRAS = {
+    "extended": [
+        BomLine("System", 1, 1,
+                "32x16 slotted waveguide", "ANT-WG-32x16-X",
+                "alumina dielectric-filled, machined",
+                "AERIS-10X antenna: 16x slotted-waveguide sticks, 32 slots each"),
+        BomLine("System", 1, 1,
+                "RF rotary joint + slip ring", "SLIPRING-RF-X",
+                "coax rotary joint + power/data slip ring",
+                "360deg mechanical scan: X-band rotary joint plus DC/data slip ring"),
+    ],
+    "nexus": [
+        BomLine("System", 1, 1,
+                "RF rotary joint + slip ring", "SLIPRING-RF-N",
+                "coax rotary joint + power/data slip ring",
+                "360deg mechanical scan: X-band rotary joint plus DC/data slip ring"),
+    ],
+}
+
 
 def load_prices(path: str | None) -> dict[str, float]:
     if not path:
@@ -216,6 +238,11 @@ def main() -> None:
         got = reader(path, label, boards)
         lines += got
         print(f"  {label:13s} x{boards:<2d}: {len(got):3d} lines from {os.path.basename(path)}")
+
+    extras = SYSTEM_EXTRAS.get(args.variant, [])
+    lines += extras
+    for ex in extras:
+        print(f"  {'System':13s} x{ex.boards:<2d}:   1 line  -> {ex.value}")
 
     out_path = args.output
     if not os.path.isabs(out_path):
